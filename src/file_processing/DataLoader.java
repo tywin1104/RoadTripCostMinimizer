@@ -12,6 +12,7 @@ import java.util.Map;
 import adt.City;
 import adt.Meal;
 import au.com.bytecode.opencsv.CSVReader;
+import graph.Digraph;
 
 public class DataLoader {
 
@@ -23,9 +24,10 @@ public class DataLoader {
 	public static final Meal W1 = new Meal("Dave's Hot 'n Juicy 1/4 lb. Single with Cheese", 6.19);
 	public static final Meal W2 = new Meal("Spicy Chicken - Combo", 6.59);
 
+	public static ArrayList<City> cities;
 	public static Map<Integer, City> IndexToCity = new HashMap<Integer, City>();
 
-	public static ArrayList<City> loadCities() throws IOException, FileNotFoundException {
+	public static void loadCities() throws IOException, FileNotFoundException {
 		ArrayList<City> cities = new ArrayList<City>();
 		String fileIn = "data/USCities.csv";
 
@@ -52,7 +54,7 @@ public class DataLoader {
 			loadRestaurants(city);
 		}
 
-		return cities;
+		DataLoader.cities = cities;
 	}
 
 	private static void loadRestaurants(City city) throws IOException, FileNotFoundException {
@@ -87,36 +89,50 @@ public class DataLoader {
 		city.setDiningOptions(diningOptions);
 	}
 
-//	public static Digraph loadDigraphs(String file) {
-////		City[] cities = loadCities(file)
-//		// Read from connectedCities.txt
-//		// For each pair, translate cityName -> cityName to int -> int
-//		// init, add to the digraph and return the complete digraph
-//	}
+	public static Digraph loadDigraphs() throws IOException, FileNotFoundException {
+		// Read city connection data from connectedCities.txt
+		// Build Directed Graph to support DFS and BFS graph processing algorithms
+		if (DataLoader.cities == null)
+			try {
+				loadCities();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		// Init the Digraph data structure
+		Digraph digraph = new Digraph(cities.size());
 
-//	private static CitygetCityFromName(String name)  {
-//	  //Helper function
-//	}
+		String fileIn = "data/connectedCities.txt";
+		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
+		List<String[]> allRows = reader.readAll();
+		for (String[] row : allRows) {
+			String from = row[0].toLowerCase().trim();
+			String to = row[1].toLowerCase().trim();
+			// Find the corresponding city objects from loaded cities by their names
+			City fromCity = null;
+			City toCity = null;
+			for (City city : cities) {
+				if (city.getName().toLowerCase().equals(from))
+					fromCity = city;
+				else if (city.getName().toLowerCase().equals(to))
+					toCity = city;
+			}
+			// Add each connection as edge to the Digraph
+			digraph.addEdge(fromCity.getGraphIndex(), toCity.getGraphIndex());
+		}
+		// Return the complete Digraph
+		return digraph;
+	}
 
 //	public static EdgeWeightedDigraph LoadEdgeWeightedDigraph(String file) {
 //		// Read from connectedCities.txt
 //		// This time, construct an EdgeWeightedDigraph
 //	}
 
-	public static void main(String[] args) {
-		try {
-			ArrayList<City> cities = loadCities();
-			for (City city : cities) {
-				System.out.println(Arrays.asList(city.getDiningOptions()));
-			}
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		Digraph di = loadDigraphs();
+		System.out.println(di);
+		loadCities();
+		System.out.println(IndexToCity);
 	}
 
 }
