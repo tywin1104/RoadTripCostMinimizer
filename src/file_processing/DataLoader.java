@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class DataLoader {
 	public static ArrayList<City> cities;
 	public static Map<Integer, City> IndexToCity = new HashMap<Integer, City>();
 
-	public static void loadCities() throws IOException, FileNotFoundException {
+	private static void loadCities() throws IOException, FileNotFoundException {
 		ArrayList<City> cities = new ArrayList<City>();
 		String fileIn = "data/USCities.csv";
 
@@ -55,6 +54,18 @@ public class DataLoader {
 		}
 
 		DataLoader.cities = cities;
+	}
+
+	// Helper function to get index of a specific city in the graph by its name
+	public static int getCityIndexByName(String name) {
+		if (cities == null)
+			throw new RuntimeException("Cities are not loaded yet");
+
+		for (City city : cities) {
+			if (city.getName().toLowerCase().equals(name.trim().toLowerCase()))
+				return city.getGraphIndex();
+		}
+		return -1;
 	}
 
 	private static void loadRestaurants(City city) throws IOException, FileNotFoundException {
@@ -107,17 +118,12 @@ public class DataLoader {
 		for (String[] row : allRows) {
 			String from = row[0].toLowerCase().trim();
 			String to = row[1].toLowerCase().trim();
-			// Find the corresponding city objects from loaded cities by their names
-			City fromCity = null;
-			City toCity = null;
-			for (City city : cities) {
-				if (city.getName().toLowerCase().equals(from))
-					fromCity = city;
-				else if (city.getName().toLowerCase().equals(to))
-					toCity = city;
-			}
+			// Find the corresponding index in graph from loaded cities by their names
 			// Add each connection as edge to the Digraph
-			digraph.addEdge(fromCity.getGraphIndex(), toCity.getGraphIndex());
+			int index_from = getCityIndexByName(from);
+			int index_to = getCityIndexByName(to);
+			assert index_from != -1 && index_to != -1; 
+			digraph.addEdge(index_from, index_to);
 		}
 		// Return the complete Digraph
 		return digraph;

@@ -27,7 +27,7 @@ public class City {
 		this.diningOptions = new HashMap<>();
 		diningOptions.put("MacDonald", false);
 		diningOptions.put("BurgerKing", false);
-		diningOptions.put("Wendy", false); 
+		diningOptions.put("Wendy", false);
 	}
 
 	public String getName() {
