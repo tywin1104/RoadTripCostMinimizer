@@ -27,7 +27,7 @@ public class City {
 		this.diningOptions = new HashMap<>();
 		diningOptions.put("MacDonald", false);
 		diningOptions.put("BurgerKing", false);
-		diningOptions.put("Wendy", false);
+		diningOptions.put("Wendy", false); 
 	}
 
 	public String getName() {
@@ -56,18 +56,6 @@ public class City {
 
 	public Meal getMeal() {
 		return meal;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
 	}
 
 	public void setDiningCost(double diningCost) {
