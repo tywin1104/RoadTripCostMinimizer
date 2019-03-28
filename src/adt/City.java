@@ -10,7 +10,6 @@ public class City {
 	private final String name;
 	private final double latitude;
 	private final double longitude;
-	private double diningCost;
 	// The integer index for the city when loaded into graphs
 	private int graphIndex;
 	// A hash table that records availability of three dining restaurants
@@ -23,7 +22,6 @@ public class City {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.meal = null;
-		this.diningCost = 0;
 		this.graphIndex = -1;
 		this.initDiningOptions();
 	}
@@ -47,10 +45,6 @@ public class City {
 		return longitude;
 	}
 
-	public double getDiningCost() {
-		return diningCost;
-	}
-
 	public int getGraphIndex() {
 		return graphIndex;
 	}
@@ -61,10 +55,6 @@ public class City {
 
 	public Meal getMeal() {
 		return meal;
-	}
-
-	public void setDiningCost(double diningCost) {
-		this.diningCost = diningCost;
 	}
 
 	public void setGraphIndex(int graphIndex) {
