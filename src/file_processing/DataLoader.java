@@ -4,13 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import adt.City;
 import adt.Meal;
 import au.com.bytecode.opencsv.CSVReader;
+import edu.princeton.cs.algs4.DirectedEdge;
+import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import graph.Digraph;
 
 public class DataLoader {
@@ -122,23 +126,86 @@ public class DataLoader {
 			// Add each connection as edge to the Digraph
 			int index_from = getCityIndexByName(from);
 			int index_to = getCityIndexByName(to);
-			assert index_from != -1 && index_to != -1; 
+			assert index_from != -1 && index_to != -1;
 			digraph.addEdge(index_from, index_to);
 		}
 		// Return the complete Digraph
 		return digraph;
 	}
 
-//	public static EdgeWeightedDigraph LoadEdgeWeightedDigraph(String file) {
-//		// Read from connectedCities.txt
-//		// This time, construct an EdgeWeightedDigraph
-//	}
+	public static EdgeWeightedDigraph LoadEdgeWeightedDigraph() throws IOException {
+		if (DataLoader.cities == null)
+			try {
+				loadCities();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		// Init the Digraph data structure
+		EdgeWeightedDigraph graph = new EdgeWeightedDigraph(cities.size());
+		ArrayList<Integer[]> unfinished = new ArrayList<Integer[]>();
+
+		String fileIn = "data/connectedCities.txt";
+		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
+		List<String[]> allRows = reader.readAll();
+		for (String[] row : allRows) {
+			int index_from = getCityIndexByName(row[0].toLowerCase().trim());
+			int index_to = getCityIndexByName(row[1].toLowerCase().trim());
+			City city_from = IndexToCity.get(index_from);
+			City city_to = IndexToCity.get(index_to);
+			// If the origin city is BOSTON, can eat anywhere
+			Meal prev_meal = city_from.getMeal();
+			Meal selected_meal;
+			if (index_from == 0) {
+				selected_meal = M1;
+				city_to.setMeal(selected_meal);
+				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+				graph.addEdge(edge);
+				continue;
+			}
+			if (prev_meal != null) {
+				if (prev_meal.equals(M1))
+					selected_meal = M2;
+				else {
+					selected_meal = M1;
+				}
+				city_to.setMeal(selected_meal);
+				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+				graph.addEdge(edge);
+			} else {
+				unfinished.add(new Integer[] { index_from, index_to });
+			}
+		}
+
+		for (ListIterator<Integer[]> pair = unfinished.listIterator(); pair.hasNext();) {
+			Integer[] value = pair.next();
+			int index_from = value[0];
+			int index_to = value[1];
+			City city_from = IndexToCity.get(index_from);
+			City city_to = IndexToCity.get(index_to);
+			Meal prev_meal = city_from.getMeal();
+			Meal selected_meal;
+			if (prev_meal != null) {
+				if (prev_meal.equals(M1))
+					selected_meal = M2;
+				else {
+					selected_meal = M1;
+				}
+				city_to.setMeal(selected_meal);
+				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+				graph.addEdge(edge);
+			}
+			pair.remove();
+		}
+		return graph;
+	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		Digraph di = loadDigraphs();
-		System.out.println(di);
-		loadCities();
-		System.out.println(IndexToCity);
+//		Digraph di = loadDigraphs();
+//		System.out.println(di);
+//		loadCities();
+//		System.out.println(IndexToCity);
+		EdgeWeightedDigraph graph = LoadEdgeWeightedDigraph();
+		System.out.println(graph);
 	}
 
 }
