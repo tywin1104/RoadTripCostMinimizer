@@ -2,6 +2,8 @@ package graph;
 
 import edu.princeton.cs.algs4.Bag;
 
+//Reference: textbook
+//ADT for edge weighted digraph using by Dijkstra's algorithm to compute shortest path.
 public class EdgeWeightedDigraph {
 	private static final String NEWLINE = System.getProperty("line.separator");
 	private final int V; // number of vertices
@@ -49,7 +51,7 @@ public class EdgeWeightedDigraph {
 			for (DirectedEdge e : adj[v]) {
 				s.append(e + "  ");
 			}
-			s.append(NEWLINE); 
+			s.append(NEWLINE);
 		}
 		return s.toString();
 	}

@@ -3,12 +3,17 @@ package adt;
 import java.util.HashMap;
 import java.util.Map;
 
+//ADT representing City object in the program
+//Encapsulate metadata about each city as long as relevant information used by this program
+//for each city	
 public class City {
 	private final String name;
 	private final double latitude;
 	private final double longitude;
 	private double diningCost;
+	// The integer index for the city when loaded into graphs
 	private int graphIndex;
+	// A hash table that records availability of three dining restaurants
 	private Map<String, Boolean> diningOptions;
 	private Meal meal;
 

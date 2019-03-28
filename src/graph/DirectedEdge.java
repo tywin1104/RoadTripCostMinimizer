@@ -1,5 +1,7 @@
 package graph;
 
+//Reference: textbook
+//ADT for directed edge with certain weight
 public class DirectedEdge {
 	private final int v; // edge source
 	private final int w; // edge target

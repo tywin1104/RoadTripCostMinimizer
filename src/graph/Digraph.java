@@ -2,6 +2,8 @@ package graph;
 
 import edu.princeton.cs.algs4.Bag;
 
+//Reference: textbook
+//ADT for directed graph
 public class Digraph {
 	private final int V;
 	private int E;

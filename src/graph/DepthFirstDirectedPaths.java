@@ -2,6 +2,9 @@ package graph;
 
 import java.util.Stack;
 
+//Reference: textbook
+//DFS algorithm to find the path from a given source
+//Could also be used to check reachability 
 public class DepthFirstDirectedPaths {
 	private boolean[] marked; // marked[v] = true iff v is reachable from s
 	private int[] edgeTo; // edgeTo[v] = last edge on path from s to v

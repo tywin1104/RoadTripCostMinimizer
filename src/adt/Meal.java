@@ -1,7 +1,10 @@
 package adt;
 
+//ADT representing Meal object 
 public class Meal {
+	// The name of the meal
 	private final String name;
+	// The price for the meal
 	private final double price;
 
 	public Meal(String name, double price) {
@@ -16,17 +19,6 @@ public class Meal {
 
 	public double getPrice() {
 		return price;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(price);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
 	}
 
 	@Override

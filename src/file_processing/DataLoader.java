@@ -13,9 +13,9 @@ import java.util.Map;
 import adt.City;
 import adt.Meal;
 import au.com.bytecode.opencsv.CSVReader;
-import edu.princeton.cs.algs4.DirectedEdge;
-import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import graph.Digraph;
+import graph.DirectedEdge;
+import graph.EdgeWeightedDigraph;
 
 public class DataLoader {
 
@@ -133,6 +133,72 @@ public class DataLoader {
 		return digraph;
 	}
 
+//	public static EdgeWeightedDigraph LoadEdgeWeightedDigraph() throws IOException {
+//		if (DataLoader.cities == null)
+//			try {
+//				loadCities();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		// Init the Digraph data structure
+//		EdgeWeightedDigraph graph = new EdgeWeightedDigraph(cities.size());
+//		ArrayList<Integer[]> unfinished = new ArrayList<Integer[]>();
+//
+//		String fileIn = "data/connectedCities.txt";
+//		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
+//		List<String[]> allRows = reader.readAll();
+//		for (String[] row : allRows) {
+//			int index_from = getCityIndexByName(row[0].toLowerCase().trim());
+//			int index_to = getCityIndexByName(row[1].toLowerCase().trim());
+//			City city_from = IndexToCity.get(index_from);
+//			City city_to = IndexToCity.get(index_to);
+//			// If the origin city is BOSTON, can eat anywhere
+//			Meal prev_meal = city_from.getMeal();
+//			Meal selected_meal;
+//			if (index_from == 0) {
+//				selected_meal = M1;
+//				city_to.setMeal(selected_meal);
+//				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+//				graph.addEdge(edge);
+//				continue;
+//			}
+//			if (prev_meal != null) {
+//				if (prev_meal.equals(M1))
+//					selected_meal = M2;
+//				else {
+//					selected_meal = M1;
+//				}
+//				city_to.setMeal(selected_meal);
+//				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+//				graph.addEdge(edge);
+//			} else {
+//				unfinished.add(new Integer[] { index_from, index_to });
+//			}
+//		}
+
+//		for (ListIterator<Integer[]> pair = unfinished.listIterator(); pair.hasNext();) {
+//			Integer[] value = pair.next();
+//			int index_from = value[0];
+//			int index_to = value[1];
+//			City city_from = IndexToCity.get(index_from);
+//			City city_to = IndexToCity.get(index_to);
+//			Meal prev_meal = city_from.getMeal();
+//			Meal selected_meal;
+//			if (prev_meal != null) {
+//				if (prev_meal.equals(M1))
+//					selected_meal = M2;
+//				else {
+//					selected_meal = M1;
+//				}
+//				city_to.setMeal(selected_meal);
+//				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
+//				graph.addEdge(edge);
+//			}
+//			pair.remove();
+//		}
+//		return graph;
+//	}
+
 	public static EdgeWeightedDigraph LoadEdgeWeightedDigraph() throws IOException {
 		if (DataLoader.cities == null)
 			try {
@@ -142,59 +208,14 @@ public class DataLoader {
 			}
 		// Init the Digraph data structure
 		EdgeWeightedDigraph graph = new EdgeWeightedDigraph(cities.size());
-		ArrayList<Integer[]> unfinished = new ArrayList<Integer[]>();
-
 		String fileIn = "data/connectedCities.txt";
 		CSVReader reader = new CSVReader(new FileReader(fileIn), ',', '"', 0);
 		List<String[]> allRows = reader.readAll();
 		for (String[] row : allRows) {
 			int index_from = getCityIndexByName(row[0].toLowerCase().trim());
 			int index_to = getCityIndexByName(row[1].toLowerCase().trim());
-			City city_from = IndexToCity.get(index_from);
-			City city_to = IndexToCity.get(index_to);
-			// If the origin city is BOSTON, can eat anywhere
-			Meal prev_meal = city_from.getMeal();
-			Meal selected_meal;
-			if (index_from == 0) {
-				selected_meal = M1;
-				city_to.setMeal(selected_meal);
-				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
-				graph.addEdge(edge);
-				continue;
-			}
-			if (prev_meal != null) {
-				if (prev_meal.equals(M1))
-					selected_meal = M2;
-				else {
-					selected_meal = M1;
-				}
-				city_to.setMeal(selected_meal);
-				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
-				graph.addEdge(edge);
-			} else {
-				unfinished.add(new Integer[] { index_from, index_to });
-			}
-		}
-
-		for (ListIterator<Integer[]> pair = unfinished.listIterator(); pair.hasNext();) {
-			Integer[] value = pair.next();
-			int index_from = value[0];
-			int index_to = value[1];
-			City city_from = IndexToCity.get(index_from);
-			City city_to = IndexToCity.get(index_to);
-			Meal prev_meal = city_from.getMeal();
-			Meal selected_meal;
-			if (prev_meal != null) {
-				if (prev_meal.equals(M1))
-					selected_meal = M2;
-				else {
-					selected_meal = M1;
-				}
-				city_to.setMeal(selected_meal);
-				DirectedEdge edge = new DirectedEdge(index_from, index_to, selected_meal.getPrice());
-				graph.addEdge(edge);
-			}
-			pair.remove();
+			DirectedEdge edge = new DirectedEdge(index_from, index_to, 1);
+			graph.addEdge(edge);
 		}
 		return graph;
 	}

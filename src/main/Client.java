@@ -3,10 +3,14 @@ package main;
 import java.io.IOException;
 import java.util.Stack;
 
+import edu.princeton.cs.algs4.StdOut;
 import file_processing.DataLoader;
 import graph.BreadthFirstDirectedPaths;
 import graph.DepthFirstDirectedPaths;
 import graph.Digraph;
+import graph.DijkstraSP;
+import graph.DirectedEdge;
+import graph.EdgeWeightedDigraph;
 
 public class Client {
 
@@ -48,11 +52,24 @@ public class Client {
 		}
 		return result.toString();
 	}
-	 
 
-	public static void main(String[] args) {
-		System.out.println(getPath(true));
-		System.out.println(getPath(false));
+	public static void main(String[] args) throws IOException {
+		System.out.println(getPath(true)); 
+//		System.out.println(getPath(false));
+		EdgeWeightedDigraph graph = DataLoader.LoadEdgeWeightedDigraph();
+		int from_index = DataLoader.getCityIndexByName("Boston");
+		int to_index = DataLoader.getCityIndexByName("Minneapolis");
+
+		DijkstraSP sp = new DijkstraSP(graph, from_index);
+		if (sp.hasPathTo(to_index)) {
+			StdOut.printf("%d to %d (%.2f)  ", 0, to_index, sp.distTo(to_index));
+			for (DirectedEdge e : sp.pathTo(to_index)) {
+				StdOut.print(e + "   ");
+			}
+			StdOut.println();
+		} else {
+			StdOut.printf("%d to %d         no path\n", 0, to_index);
+		}
 
 	}
 

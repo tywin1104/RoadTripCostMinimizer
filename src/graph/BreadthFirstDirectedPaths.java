@@ -4,6 +4,9 @@ import java.util.Stack;
 
 import edu.princeton.cs.algs4.Queue;
 
+//Reference: textbook
+//BFS algorithm to find shortest path from a given source according to the 
+// number of nodes traveled
 public class BreadthFirstDirectedPaths {
 	private final int s;
 	private boolean[] marked; // marked[v] = is there an s->v path?
@@ -43,7 +46,7 @@ public class BreadthFirstDirectedPaths {
 		int x;
 		for (x = v; x != s; x = edgeTo[x])
 			path.push(x);
-		path.push(s); 
+		path.push(s);
 		return path;
 	}
 }
